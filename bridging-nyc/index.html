@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Upward Mobility Through Place Exploration — NYC</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+
+  <!-- ============================================================
+       HEADER
+  ============================================================ -->
+  <header>
+    <div class="header-inner">
+      <h1>Mapping Upward Mobility Through Place Exploration in New York City</h1>
+      <p class="subtitle">
+        A data-driven analysis of neighborhood accessibility, mobility rungs,
+        and the case for an AI-powered exploration assistant
+      </p>
+      <p class="meta">
+        [Your Name] &nbsp;|&nbsp; [Date] &nbsp;|&nbsp; Portfolio Project
+      </p>
+    </div>
+  </header>
+
+  <!-- ============================================================
+       NAVIGATION
+  ============================================================ -->
+  <nav id="toc">
+    <ul>
+      <li><a href="#abstract">Abstract</a></li>
+      <li><a href="#results">Results</a></li>
+      <li><a href="#discussion">Discussion</a></li>
+      <li><a href="#methods">Methods</a></li>
+      <li><a href="#references">References</a></li>
+    </ul>
+  </nav>
+
+  <!-- ============================================================
+       MAIN CONTENT
+  ============================================================ -->
+  <main>
+
+    <!-- ──────────────────────────────────────────────────────────
+         SECTION 1: ABSTRACT
+    ────────────────────────────────────────────────────────────-->
+    <section id="abstract">
+      <h2>Abstract</h2>
+      <p>
+        <!-- PLACEHOLDER — we will write this together -->
+        [ABSTRACT TEXT TO BE WRITTEN]
+      </p>
+    </section>
+
+    <!-- ──────────────────────────────────────────────────────────
+         SECTION 2: RESULTS
+    ────────────────────────────────────────────────────────────-->
+    <section id="results">
+      <h2>Results</h2>
+
+      <!-- CONTEXT MAPS -->
+      <div class="subsection" id="results-context">
+        <h3>2.1 &nbsp; NYC Neighborhood Mobility Landscape</h3>
+        <p>
+          <!-- PLACEHOLDER — brief framing paragraph -->
+          [FRAMING TEXT: introduce the mobility score, rungs, and the two context maps]
+        </p>
+
+        <div class="figure-row">
+
+          <figure class="fig-half">
+            <img src="figures/map_nta_score.png"
+                 alt="NYC map colored by mobility score" />
+            <figcaption>
+              <strong>Figure 1.</strong> NYC Neighborhood Tabulation Areas (NTAs)
+              colored by mobility score derived from Opportunity Atlas data.
+              Darker shades indicate higher upward mobility potential.
+            </figcaption>
+          </figure>
+
+          <figure class="fig-half">
+            <img src="figures/map_km_rung_w_mta.png"
+                 alt="NYC map colored by rung with MTA subway stops" />
+            <figcaption>
+              <strong>Figure 2.</strong> NTAs classified into four mobility rungs
+              (1–4) via KMeans clustering, with MTA subway stops overlaid.
+              Rung 4 represents the highest upward mobility potential.
+            </figcaption>
+          </figure>
+
+        </div>
+      </div>
+
+      <!-- FIGURE 3: ALL NEXT NEAREST NEIGHBORHOODS -->
+      <div class="subsection" id="results-nearest">
+        <h3>2.2 &nbsp; Nearest Upward-Mobility Destinations</h3>
+        <p>
+          <!-- PLACEHOLDER -->
+          [INTERPRETIVE TEXT: what does it mean that 77.2% of origins have
+          a nearest neighbor at ≤0 rung change?]
+        </p>
+
+        <figure class="fig-full">
+          <div class="iframe-wrapper">
+            <iframe src="figures/all_next_nearest_nbhd_3groups.html"
+                    title="All Next Nearest Neighborhoods — Interactive Map">
+            </iframe>
+          </div>
+          <figcaption>
+            <strong>Figure 3 (Interactive).</strong> Each origin neighborhood
+            is linked to its nearest destination by travel time.
+            <span class="legend-blue">■ Blue</span> = delta rung &gt; 1 (4.1%);
+            <span class="legend-green">■ Green</span> = delta rung = 1 (18.8%);
+            <span class="legend-red">■ Red</span> = delta rung ≤ 0 (77.2%).
+            Hover over any line to see origin/destination names, rung, and score.
+          </figcaption>
+        </figure>
+
+        <figure class="fig-full fig-static">
+          <img src="figures/all_next_nearest_nbhd_3groups.png"
+               alt="Static summary of nearest neighborhood rung changes" />
+          <figcaption>
+            <strong>Figure 3 (Static Summary).</strong> Distribution of origin
+            neighborhoods by rung-change category, with median travel time
+            and median score gain annotated per group.
+          </figcaption>
+        </figure>
+      </div>
+
+      <!-- FIGURE 4: TOP 10 ATTRACTORS -->
+      <div class="subsection" id="results-attractors">
+        <h3>2.3 &nbsp; High-Value Destination Attractors</h3>
+        <p>
+          <!-- PLACEHOLDER -->
+          [INTERPRETIVE TEXT: what makes a neighborhood a top attractor?
+          Mean travel time 38.9 min, median 36.7 min, median destination score 0.5]
+        </p>
+
+        <figure class="fig-full">
+          <div class="iframe-wrapper">
+            <iframe src="figures/top10_attractors_filterable.html"
+                    title="Top 10 Attractor Neighborhoods — Interactive">
+            </iframe>
+          </div>
+          <figcaption>
+            <strong>Figure 4 (Interactive).</strong> The 10 neighborhoods
+            appearing most often as top-ranked +1 rung destinations across
+            all origins. 86 unique origins are connected to these attractors.
+            Mean travel time: 38.9 min; Median: 36.7 min.
+            Use the filter to toggle between top 1, 3, and 10 destinations.
+          </figcaption>
+        </figure>
+
+        <figure class="fig-full fig-static">
+          <img src="figures/top10_attractors_filterable.png"
+               alt="3-panel bubble chart of top attractor neighborhoods" />
+          <figcaption>
+            <strong>Figure 4 (Static Summary).</strong> Three-panel bubble chart
+            showing top 1, 3, and 10 destinations. Bubble size and height
+            indicate the number of origins attracted; horizontal position
+            reflects travel burden.
+          </figcaption>
+        </figure>
+      </div>
+
+      <!-- FIGURE 5: DESERT NEIGHBORHOODS -->
+      <div class="subsection" id="results-deserts">
+        <h3>2.4 &nbsp; Mobility Deserts</h3>
+        <p>
+          <!-- PLACEHOLDER -->
+          [INTERPRETIVE TEXT: what is a desert? What does it mean for
+          residents of rung 1, 2, 3 neighborhoods to have no +1 rung
+          destination within 45 minutes?]
+        </p>
+
+        <figure class="fig-full">
+          <div class="iframe-wrapper">
+            <iframe src="figures/origin_deserts_circles.html"
+                    title="Mobility Desert Neighborhoods — Interactive">
+            </iframe>
+          </div>
+          <figcaption>
+            <strong>Figure 5 (Interactive).</strong> Origin neighborhoods
+            classified as "deserts" — no +1 rung destination reachable
+            within 45 minutes of travel. Hover to explore neighborhood names
+            and rung classifications.
+          </figcaption>
+        </figure>
+
+        <figure class="fig-full fig-static">
+          <img src="figures/origin_deserts_circles.png"
+               alt="3-panel line chart of desert neighborhoods by rung" />
+          <figcaption>
+            <strong>Figure 5 (Static Summary).</strong> Three-panel line chart
+            for origin rungs 1, 2, and 3. Each line shows travel time vs.
+            number of neighborhoods accessible, illustrating where access
+            to upward-mobility destinations collapses.
+          </figcaption>
+        </figure>
+      </div>
+
+    </section><!-- /results -->
+
+    <!-- ──────────────────────────────────────────────────────────
+         SECTION 3: DISCUSSION
+    ────────────────────────────────────────────────────────────-->
+    <section id="discussion">
+      <h2>Discussion</h2>
+
+      <div class="subsection" id="discussion-interpretation">
+        <h3>3.1 &nbsp; What the Data Reveals</h3>
+        <p>
+          <!-- PLACEHOLDER -->
+          [INTERPRETIVE TEXT: synthesize findings from all 3 figures.
+          The structural barriers to upward mobility are not just economic —
+          they are geographic and behavioral.]
+        </p>
+      </div>
+
+      <div class="subsection" id="discussion-literature">
+        <h3>3.2 &nbsp; Supporting Evidence from the Literature</h3>
+        <p>
+          <!-- PLACEHOLDER — will cite Moro et al. 2021 and book findings -->
+          [LITERATURE TEXT: connect your findings to Moro et al. (2021)
+          and the book you read. Key themes: place exploration, visitation
+          patterns, experienced segregation, behavioral vs. residential factors.]
+        </p>
+      </div>
+
+      <div class="subsection" id="discussion-intervention">
+        <h3>3.3 &nbsp; The Proposed Intervention: An AI Exploration Agent</h3>
+        <p>
+          <!-- PLACEHOLDER -->
+          [INTERVENTION TEXT: describe the 3-part AI agent —
+          Neighborhood Discovery Assistant, Weekly Exploration Planner,
+          Behavioral Coach — and how each addresses a gap shown in the data.]
+        </p>
+
+        <!-- SCREEN RECORDING EMBED -->
+        <div class="video-container">
+          <h4>Demo: AI Agent in Action</h4>
+          <video controls poster="">
+            <source src="videos/intervention_demo.mp4" type="video/mp4">
+            <source src="videos/intervention_demo.webm" type="video/webm">
+            <p>Your browser does not support the video tag.
+               <a href="videos/intervention_demo.mp4">Download the demo video.</a>
+            </p>
+          </video>
+          <p class="video-caption">
+            <em>Screen recording demonstrating the AI exploration agent prototype.
+            [Brief description of what is shown in the recording.]</em>
+          </p>
+        </div>
+      </div>
+
+      <div class="subsection" id="discussion-limitations">
+        <h3>3.4 &nbsp; Limitations and Next Steps</h3>
+        <p>
+          <!-- PLACEHOLDER -->
+          [LIMITATIONS TEXT: data constraints, transit assumptions,
+          what the agent still needs to do, future work.]
+        </p>
+      </div>
+
+    </section><!-- /discussion -->
+
+    <!-- ──────────────────────────────────────────────────────────
+         SECTION 4: METHODS
+    ────────────────────────────────────────────────────────────-->
+    <section id="methods">
+      <h2>Methods</h2>
+
+      <div class="subsection" id="methods-data">
+        <h3>4.1 &nbsp; Data Sources</h3>
+        <p>
+          <!-- PLACEHOLDER -->
+          [DATA TEXT: Opportunity Atlas, NTA shapefiles, MTA GTFS or
+          travel time matrix, KMeans clustering approach]
+        </p>
+      </div>
+
+      <div class="subsection" id="methods-definitions">
+        <h3>4.2 &nbsp; Key Definitions</h3>
+        <dl class="definitions">
+          <dt>Mobility Score</dt>
+          <dd>Neighborhood-level score derived from Opportunity Atlas data,
+              translated from census tracts to NTAs.</dd>
+
+          <dt>Rung</dt>
+          <dd>A categorical label (1–4) assigned to each NTA via KMeans
+              clustering on the mobility score. Rung 1 = lowest mobility
+              potential; Rung 4 = highest.</dd>
+
+          <dt>Delta Rung</dt>
+          <dd>Destination rung minus origin rung. A positive delta rung
+              indicates access to a higher-mobility neighborhood.</dd>
+
+          <dt>Desert</dt>
+          <dd>An origin neighborhood with no +1 rung destination reachable
+              within 45 minutes of travel.</dd>
+        </dl>
+      </div>
+
+      <div class="subsection" id="methods-approach">
+        <h3>4.3 &nbsp; Analytical Approach</h3>
+        <p>
+          <!-- PLACEHOLDER -->
+          [APPROACH TEXT: how you built the travel time matrix,
+          how you identified nearest neighbors, how deserts were flagged]
+        </p>
+
+        <!-- OPTIONAL: Code snippet block -->
+        <pre><code>
+# PLACEHOLDER — insert representative code snippet here
+# e.g., KMeans clustering on mobility scores
+
+from sklearn.cluster import KMeans
+import pandas as pd
+
+kmeans = KMeans(n_clusters=4, random_state=42)
+df['rung'] = kmeans.fit_predict(df[['mobility_score']])
+        </code></pre>
+      </div>
+
+      <div class="subsection" id="methods-tools">
+        <h3>4.4 &nbsp; Tools and Libraries</h3>
+        <ul class="tools-list">
+          <li><strong>Python</strong> — core analysis language</li>
+          <li><strong>[Library 1]</strong> — [purpose]</li>
+          <li><strong>[Library 2]</strong> — [purpose]</li>
+          <li><strong>[Visualization library]</strong> — interactive HTML graphs</li>
+          <li><strong>Opportunity Atlas</strong> — mobility score source data</li>
+          <li><strong>MTA / Transit data</strong> — travel time computation</li>
+        </ul>
+      </div>
+
+    </section><!-- /methods -->
+
+    <!-- ──────────────────────────────────────────────────────────
+         SECTION 5: REFERENCES
+    ────────────────────────────────────────────────────────────-->
+    <section id="references">
+      <h2>References</h2>
+      <ol class="references-list">
+        <li id="ref-moro2021">
+          Moro, E., Calacci, D., Dong, X., &amp; Pentland, A. (2021).
+          Mobility patterns are associated with experienced income segregation
+          in large US cities.
+          <em>Nature Communications</em>, 12, 4633.
+          <a href="https://doi.org/10.1038/s41467-021-24899-8" target="_blank">
+            https://doi.org/10.1038/s41467-021-24899-8
+          </a>
+        </li>
+        <li id="ref-book">
+          [BOOK REFERENCE — Author, Title, Year]
+        </li>
+        <li id="ref-opp-atlas">
+          Chetty, R., Friedman, J. N., Hendren, N., Jones, M. R., &amp;
+          Porter, S. R. (2018). The Opportunity Atlas: Mapping the Childhood
+          Roots of Social Mobility. NBER Working Paper No. 25147.
+        </li>
+      </ol>
+    </section>
+
+  </main>
+
+  <!-- ============================================================
+       FOOTER
+  ============================================================ -->
+  <footer>
+    <p>
+      Created by [Your Name] &nbsp;|&nbsp; [Year] &nbsp;|&nbsp;
+      Graduate School Portfolio Project
+    </p>
+  </footer>
+
+</body>
+</html>
