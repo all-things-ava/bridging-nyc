@@ -1,417 +1,314 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Upward Mobility Through Place Exploration — NYC</title>
-  <link rel="stylesheet" href="style.css" />
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bridging NYC — An Agentic Prototype for Navigating the Opportunity Landscape</title>
+<meta name="description" content="A prototype agentic system that grounds LLMs in socioeconomic and transit data to generate itineraries to higher-mobility NYC neighborhoods.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<style>
+  :root { --ink:#111418; --accent:#2563eb; --muted:#5b6472; --line:#e5e8ec; --chip:#f1f4f8; }
+  * { box-sizing:border-box; }
+  body { margin:0; background:#fff; color:var(--ink);
+         font-family:"Inter","Segoe UI",system-ui,-apple-system,sans-serif;
+         font-size:17px; line-height:1.7; }
+  .page { max-width:680px; margin:0 auto; padding:72px 24px 96px; }
+  .kicker { text-transform:uppercase; letter-spacing:.12em; font-size:12px;
+            color:var(--accent); font-weight:700; margin-bottom:14px; }
+  h1 { font-size:36px; line-height:1.15; margin:0 0 14px; font-weight:800; letter-spacing:-0.02em; }
+  .byline { color:var(--muted); font-size:15px; margin-bottom:28px; }
+  .toc { background:var(--chip); border-radius:12px; padding:16px 22px; font-size:14.5px; margin-bottom:48px; }
+  .toc b { display:block; font-size:12px; text-transform:uppercase; letter-spacing:.08em; color:var(--muted); margin-bottom:6px; }
+  .toc a { color:var(--accent); text-decoration:none; margin-right:14px; white-space:nowrap; }
+  .toc .gh { margin-top:12px; padding-top:12px; border-top:1px solid var(--line); }
+  .toc .gh a { color:var(--ink); font-weight:600; }
+  @media (min-width:1000px) {
+    .page { max-width:1000px; display:grid; grid-template-columns:212px minmax(0,680px); gap:48px; align-items:start; }
+    .content { min-width:0; }
+    .toc { position:sticky; top:36px; background:none; border-radius:0; padding:2px 0 0; margin:0; }
+    .toc a { display:block; margin:0 0 9px; color:var(--muted); }
+    .toc a:hover { color:var(--accent); }
+    .toc a.active { color:var(--accent); font-weight:600; }
+  }
+  h2 { font-size:22px; margin:48px 0 12px; font-weight:700; letter-spacing:-0.01em; }
+  h3 { font-size:17px; margin:32px 0 8px; font-weight:700; }
+  h4 { font-size:15.5px; margin:26px 0 6px; font-weight:700; color:var(--muted); }
+  p { margin:0 0 18px; }
+  ul { margin:0 0 18px; padding-left:24px; }
+  li { margin-bottom:6px; }
+  code { background:var(--chip); padding:2px 6px; border-radius:5px;
+         font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; font-size:14.5px; }
+  .abstract { border-left:3px solid var(--accent); padding-left:18px; color:#333a44; }
+  sup a { color:var(--accent); text-decoration:none; font-weight:600; }
+  figure { margin:28px 0; }
+  figure img, figure video { width:100%; border-radius:12px; border:1px solid var(--line); display:block; }
+  figcaption { font-size:14px; color:var(--muted); margin-top:10px; }
+  figcaption b { color:var(--ink); }
+  .placeholder { border-radius:12px; background:var(--chip); padding:44px 20px;
+                 text-align:center; color:var(--muted); border:1px dashed #c7cdd6; }
+  .formula-note { font-size:15px; color:var(--muted); }
+  table { width:100%; border-collapse:collapse; font-size:14.5px; margin:0 0 18px; }
+  th { text-align:left; font-size:12.5px; text-transform:uppercase; letter-spacing:.06em; color:var(--muted); }
+  th, td { padding:9px 10px; border-bottom:1px solid var(--line); vertical-align:top; }
+  .repo { display:flex; gap:10px; flex-wrap:wrap; margin:36px 0 8px; }
+  .repo a { background:var(--ink); color:#fff; text-decoration:none; font-size:14px;
+            font-weight:600; padding:9px 16px; border-radius:999px; }
+  .repo a.alt { background:var(--chip); color:var(--ink); }
+  .notes, .datasrc { margin-top:56px; border-top:1px solid var(--line); padding-top:20px; }
+  .notes h2, .datasrc h2 { font-size:15px; margin:0 0 12px; color:var(--muted);
+                           text-transform:uppercase; letter-spacing:.08em; }
+  .notes ol { padding-left:20px; font-size:14.5px; color:var(--muted); }
+  .notes li { margin-bottom:8px; }
+  .datasrc p { font-size:14.5px; color:var(--muted); margin-bottom:10px; }
+  .datasrc p.cite { padding-left:24px; text-indent:-24px; }
+  .datasrc h3 { font-size:16px; margin:26px 0 8px; }
+  .datasrc .repo { margin:10px 0 14px; }
+  .datasrc a, .notes a { color:var(--accent); }
+</style>
 </head>
-
 <body>
+<div class="page">
 
-  <!-- ============================================================
-       HEADER
-  ============================================================ -->
-  <header>
-    <div class="header-inner">
-      <h1>Bridging NYC: Mapping Upward Mobility Through Place Exploration</h1>
-      <p class="subtitle">
-        A data-driven analysis of neighborhood accessibility, mobility rungs,
-        and the case for an AI-powered exploration assistant
-      </p>
-      <p class="meta">
-        Ava Grossman &nbsp;|&nbsp; 2026 &nbsp;|&nbsp; Graduate School Portfolio Project
-      </p>
-    </div>
-  </header>
-  <!-- ============================================================
-       NAVIGATION
-  ============================================================ -->
-  <nav id="toc">
-    <ul>
-      <li><a href="#abstract">Abstract</a></li>
-      <li><a href="#results">Results</a></li>
-      <li><a href="#discussion">Discussion</a></li>
-      <li><a href="#methods">Methods</a></li>
-      <li><a href="#references">References</a></li>
-    </ul>
+  <nav class="toc">
+    <b>Contents</b>
+    <a href="#abstract">Abstract</a>
+    <a href="#introduction">Introduction</a>
+    <a href="#methods">Methods</a>
+    <a href="#discussion">Discussion</a>
+    <a href="#conclusion">Conclusion</a>
+    <a href="#appendix">Appendix</a>
+    <a href="#notes">Notes</a>
+    <a href="#supplementary">Supplementary Materials</a>
+    <div class="gh"><a href="https://github.com/all-things-ava/bridging-nyc">GitHub ↗</a></div>
   </nav>
 
-  <!-- ============================================================
-       MAIN CONTENT
-  ============================================================ -->
-  <main>
+  <main class="content">
 
-    <!-- ──────────────────────────────────────────────────────────
-         SECTION 1: ABSTRACT
-    ────────────────────────────────────────────────────────────-->
-   <section id="abstract">
-      <h2>Abstract</h2>
-      <p>
-        Upward economic mobility in American cities is shaped not only by residential characteristics, 
-        but by where they go. Research suggests that the places people visit — not just the ones they 
-        reside in — play a meaningful role in determining their exposure to 
-        economic opportunity. Yet for New York City residents, transit and neighborhood inequality creates structural 
-        barriers that make upward-mobility destinations difficult or impossible 
-        to reach within a reasonable time budget.
-      </p>
-      <p>
-        This project maps those barriers across all 197 NYC Neighborhood 
-        Tabulation Areas (NTAs) as defined by the 2020 Census. Using mobility 
-        scores derived from the Opportunity Atlas and translated to the NTA 
-        level, neighborhoods are classified into four mobility rungs via KMeans 
-        clustering. A travel-time analysis then identifies, for each origin 
-        neighborhood, whether a higher-rung destination is reachable within 
-        45 minutes. The findings are stark: 77.2% of NYC neighborhoods have 
-        a nearest neighbor at the same or lower mobility rung, and 16 
-        neighborhoods qualify as mobility deserts — places with no upward-rung 
-        destination accessible within the 45-minute constraint.
-      </p>
-      <p>
-        These results motivate a proposed AI agent designed to close the gap 
-        between structural access and behavioral exploration. Drawing on 
-        frameworks from Moro et al. (2021) and Pentland's work on collective 
-        intelligence and behavioral change, the agent operates across three 
-        modules: a neighborhood discovery assistant, a weekly exploration 
-        planner, and a behavioral coach. Together, these modules aim to 
-        increase the frequency and quality of upward-mobility neighborhood 
-        visits among users who are structurally positioned to benefit most 
-        from expanded place exploration.
-      </p>
-    </section>
-    <!-- ──────────────────────────────────────────────────────────
-         SECTION 2: RESULTS
-    ────────────────────────────────────────────────────────────-->
-   <h2>Results</h2>
-      <!-- RESULTS INTRO PARAGRAPH -->
-      <p class="section-intro">
-        
-        The following results are organized across four analytical views of 
-        NYC neighborhood mobility. Each section pairs an interactive map or 
-        chart — built in Python and rendered as a self-contained HTML figure — 
-        with a static summary image. Together they build a layered picture of 
-        where upward-mobility destinations exist in New York City, how 
-        accessible they are by transit, and where access breaks down entirely. 
-        All 197 NYC Neighborhood Tabulation Areas (NTAs) are included in the 
-        analysis. Mobility scores are derived from the Opportunity Atlas and 
-        classified into four rungs via KMeans clustering. Travel time is used 
-        as the primary measure of accessibility throughout.
-      </p>
-      <!-- 2.1 CONTEXT MAPS -->
-      <div class="subsection" id="results-context">
-        <h3>2.1 &nbsp; NYC Neighborhood Mobility Landscape</h3>
-        <p>
-          <!-- PLACEHOLDER — brief framing paragraph -->
-          [FRAMING TEXT: introduce the mobility score, rungs, and the two context maps]
-        </p>
+  <div class="kicker">Portfolio</div>
+  <h1>Bridging NYC: An Agentic Prototype for Navigating the Opportunity Landscape</h1>
+  <div class="byline">Ava Grossman · 2026</div>
 
-        <div class="figure-row">
+  <h2 id="abstract">Abstract</h2>
+  <p class="abstract">Researchers study bridging networks to understand how stories, behaviors, and opportunities flow between communities.<sup><a href="#fn1" id="r1">1</a></sup> Given a user's origin neighborhood and travel-time constraint, the prototype discussed below uses LLM-based agents equipped with a dedicated knowledge base and web search capabilities to generate itineraries in neighborhoods associated with stronger upward mobility outcomes. While the prototype does not evaluate whether such recommendations produce durable bridging ties, it offers a proof of concept for how agentic systems may reduce friction in intercommunity connection.</p>
 
-          <figure class="fig-half">
-            <img src="figures/map_nta_score.png"
-                 alt="NYC map colored by mobility score" />
-            <figcaption>
-              <strong>Figure 1.</strong> NYC Neighborhood Tabulation Areas (NTAs)
-              colored by mobility score derived from Opportunity Atlas data.
-              Darker shades indicate higher upward mobility potential.
-            </figcaption>
-          </figure>
+  <h2 id="introduction">Introduction</h2>
+  <p>Urban residents often move along repeated paths shaped by work, errands, and familiar social routines, resulting in sustained contact with only a limited set of places and communities. Consequently, residents' everyday routines may create relatively few social bridges linking their home neighborhood to other neighborhoods.<sup><a href="#fn2" id="r2">2</a></sup> Work by Sampson and Levy suggests that such neighborhood isolation is associated with worse outcomes and fewer pathways to opportunity.<sup><a href="#fn3" id="r3">3</a></sup></p>
 
-          <figure class="fig-half">
-            <img src="figures/map_km_rung_w_mta.png"
-                 alt="NYC map colored by rung with MTA subway stops" />
-            <figcaption>
-              <strong>Figure 2.</strong> NTAs classified into four mobility rungs
-              (1–4) via KMeans clustering, with MTA subway stops overlaid.
-              Rung 4 represents the highest upward mobility potential.
-            </figcaption>
-          </figure>
+  <figure>
+    <img src="figures/problem_statement_city.png" alt="Left: map of New York City's five boroughs with Lower Manhattan highlighted. Right: zoomed detail showing a resident's routine activity radius.">
+    <figcaption><b>Figure 1.</b> Problem statement. Across the five boroughs (left), a resident's everyday routines concentrate within a small activity radius (right), limiting social bridges to other neighborhoods. Basemap © OpenStreetMap contributors; boundaries from NYC DCP 2020 NTAs.</figcaption>
+  </figure>
 
-        </div>
-      </div>
+  <p>In contrast, communities whose residents maintain ties across diverse social and geographic boundaries gain broader access to information, resources, and opportunities, an effect found to be a powerful driver of wealth creation.<sup><a href="#fn4" id="r4">4</a></sup> This dynamic also operates at the individual level. When individuals spend time in places outside their usual routines, they encounter new ideas, practices, and social contexts that are less available within bounded local networks.<sup><a href="#fn5" id="r5">5</a></sup> Building on this motivation, this project focuses on a narrow intervention point: reducing the search costs, uncertainty, and planning burden of reaching higher-mobility neighborhoods, where socially integrated contact is more likely to occur.</p>
 
-      <!-- FIGURE 3: ALL NEXT NEAREST NEIGHBORHOODS -->
-      <div class="subsection" id="results-nearest">
-        <h3>2.2 &nbsp; Nearest Upward-Mobility Destinations</h3>
-        <p>
-          <!-- PLACEHOLDER -->
-          [INTERPRETIVE TEXT: what does it mean that 77.2% of origins have
-          a nearest neighbor at ≤0 rung change?]
-        </p>
+  <h2 id="methods">Methods</h2>
+  <p>The prototype follows a two-step search-and-synthesize process: a search agent identifies candidate destination neighborhoods from the knowledge base, and a synthesis agent translates the selection into a concrete itinerary. Both agents are described in detail below.</p>
 
-        <figure class="fig-full">
-          <div class="iframe-wrapper">
-            <iframe src="figures/all_next_nearest_nbhd_3groups.html"
-                    title="All Next Nearest Neighborhoods — Interactive Map">
-            </iframe>
-          </div>
-          <figcaption>
-            <strong>Figure 3 (Interactive).</strong> Each origin neighborhood
-            is linked to its nearest destination by travel time.
-            <span class="legend-blue">■ Blue</span> = delta rung &gt; 1 (4.1%);
-            <span class="legend-green">■ Green</span> = delta rung = 1 (18.8%);
-            <span class="legend-red">■ Red</span> = delta rung ≤ 0 (77.2%).
-            Hover over any line to see origin/destination names, rung, and score.
-          </figcaption>
-        </figure>
+  <figure>
+    <video controls preload="metadata" poster="figures/demo_poster.jpg" aria-label="Screen recording of the prototype: a user shares their origin and routine, and the agents return an itinerary to a higher-mobility neighborhood.">
+      <source src="demo.mp4" type="video/mp4">
+      Your browser does not support embedded video. <a href="demo.mp4">Download the demo</a>.
+    </video>
+    <figcaption><b>Figure 2.</b> System demonstration. A user shares their origin and routine; the Search and Synthesize Agents return a one-rung-higher itinerary with real-time venues.</figcaption>
+  </figure>
 
-        <figure class="fig-full fig-static">
-          <img src="figures/all_next_nearest_nbhd_3groups.png"
-               alt="Static summary of nearest neighborhood rung changes" />
-          <figcaption>
-            <strong>Figure 3 (Static Summary).</strong> Distribution of origin
-            neighborhoods by rung-change category, with median travel time
-            and median score gain annotated per group.
-          </figcaption>
-        </figure>
-      </div>
+  <h3>Agent Architecture</h3>
+  <p>Each person has limited time and energy for relationships. They must divide their efforts between strengthening internal community ties, or bonding capital, and creating outward connections, or bridging capital.<sup><a href="#fn6" id="r6">6</a></sup> Prior research on social capital suggests that the most effective bridging connections are not to the wealthiest or most distant communities, but to communities just one step better off than one's own. To put it simply, the most useful connections are to communities that are one rung higher on the socioeconomic ladder.<sup><a href="#fn7" id="r7">7</a></sup></p>
+  <p>First, the Search Agent queries the knowledge base for precomputed relationships between neighborhoods, favoring destinations with stronger upward mobility outcomes, specifically neighborhoods exactly one rung higher, that remain feasible within the user's limited time budget for travel on a given day. If multiple options remain, it selects the destination offering the greatest mobility benefit relative to travel time. When these criteria cannot all be satisfied, such as when no one-rung-higher destination falls within the user's time budget, the Search Agent prioritizes an appropriate mobility step and travel feasibility over strict optimization of mobility gain.</p>
+  <p>The Synthesize Agent translates the Search Agent's destination selection into a concrete, actionable itinerary, using real-time web search to identify specific venues, such as museums, exhibits, science museums, convention centers, theme parks, coffee shops, and cafes, and prioritizing time-sensitive events when available.</p>
+  <p>These venue categories are not arbitrary. Segregation between communities arises not only from where people live, but from everyday cultural patterns in where people work, shop, and play, meaning the category of venue visited, not just its neighborhood location, shapes who encounters whom. Empirical work supports this: museums and exhibits rank among the most income-integrated venue types in American cities, and individuals with high "place exploration," a tendency to visit new locations rather than routine ones, are disproportionately drawn to exhibits, theaters, and cafes.<sup><a href="#fn8" id="r8">8</a></sup> The Synthesize Agent's venue categories align with both findings, favoring place types that are less income-segregated and behaviorally associated with exploratory, rather than routine, mobility patterns.</p>
 
-      <!-- FIGURE 4: TOP 10 ATTRACTORS -->
-      <div class="subsection" id="results-attractors">
-        <h3>2.3 &nbsp; High-Value Destination Attractors</h3>
-        <p>
-          <!-- PLACEHOLDER -->
-          [INTERPRETIVE TEXT: what makes a neighborhood a top attractor?
-          Mean travel time 38.9 min, median 36.7 min, median destination score 0.5]
-        </p>
+  <figure>
+    <img src="figures/mermaid-diagram.png" alt="Agent workflow diagram.">
+    <figcaption><b>Figure 3.</b> Search-and-synthesize agent workflow.</figcaption>
+  </figure>
 
-        <figure class="fig-full">
-          <div class="iframe-wrapper">
-            <iframe src="figures/top10_attractors_filterable.html"
-                    title="Top 10 Attractor Neighborhoods — Interactive">
-            </iframe>
-          </div>
-          <figcaption>
-            <strong>Figure 4 (Interactive).</strong> The 10 neighborhoods
-            appearing most often as top-ranked +1 rung destinations across
-            all origins. 86 unique origins are connected to these attractors.
-            Mean travel time: 38.9 min; Median: 36.7 min.
-            Use the filter to toggle between top 1, 3, and 10 destinations.
-          </figcaption>
-        </figure>
+  <p>Together, the two agents are complementary. The Search Agent targets geographic and economic opportunity, while the Synthesize Agent targets the cultural, activity-based dimension. Rather than presenting a single static recommendation, the Synthesize Agent frames each destination as part of a gradual process of breaking routine, using motivational language to explain why the trip is worthwhile.</p>
 
-        <figure class="fig-full fig-static">
-          <img src="figures/top10_attractors_filterable.png"
-               alt="3-panel bubble chart of top attractor neighborhoods" />
-          <figcaption>
-            <strong>Figure 4 (Static Summary).</strong> Three-panel bubble chart
-            showing top 1, 3, and 10 destinations. Bubble size and height
-            indicate the number of origins attracted; horizontal position
-            reflects travel burden.
-          </figcaption>
-        </figure>
-      </div>
+  <h3>Dataset</h3>
+  <p>The agents' knowledge base consists of 197 New York City Neighborhood Tabulation Areas (NTAs), each assigned a mobility rung derived from Census tract–level data in the Opportunity Atlas study of intergenerational income mobility, through a multi-stage data transformation pipeline.<sup><a href="#fn9" id="r9">9</a></sup></p>
 
-      <!-- FIGURE 5: DESERT NEIGHBORHOODS -->
-      <div class="subsection" id="results-deserts">
-        <h3>2.4 &nbsp; Mobility Deserts</h3>
-        <p>
-          <!-- PLACEHOLDER -->
-          [INTERPRETIVE TEXT: what is a desert? What does it mean for
-          residents of rung 1, 2, 3 neighborhoods to have no +1 rung
-          destination within 45 minutes?]
-        </p>
+  <figure>
+    <img src="figures/data_transformation.png" alt="Four-stage data transformation pipeline.">
+    <figcaption><b>Figure 4.</b> The construction process consisted of four primary stages: (1) geographic harmonization of Opportunity Atlas estimates from 2010 Census tracts to 2020 Census tracts, (2) aggregation of tract-level mobility estimates to Neighborhood Tabulation Areas (NTAs), (3) classification of neighborhoods into mobility rungs, and (4) construction of the subway accessibility network.</figcaption>
+  </figure>
 
-        <figure class="fig-full">
-          <div class="iframe-wrapper">
-            <iframe src="figures/origin_deserts_circles_only.html"
-                    title="Mobility Desert Neighborhoods — Interactive">
-            </iframe>
-          </div>
-          <figcaption>
-            <strong>Figure 5 (Interactive).</strong> Origin neighborhoods
-            classified as "deserts" — no +1 rung destination reachable
-            within 45 minutes of travel. Hover to explore neighborhood names
-            and rung classifications.
-          </figcaption>
-        </figure>
+  <p>Each neighborhood belongs to exactly one rung, and the resulting origin-destination dataset pairs every origin neighborhood with every other neighborhood as a potential destination, recording each pair's mobility rungs, estimated subway travel time, and derived "mobility-gain" metrics that capture the magnitude of social mobility change associated with a given trip.</p>
 
-        <figure class="fig-full fig-static">
-          <img src="figures/origin_deserts_circles_only.png"
-               alt="3-panel line chart of desert neighborhoods by rung" />
-          <figcaption>
-            <strong>Figure 5 (Static Summary).</strong> Three-panel line chart
-            for origin rungs 1, 2, and 3. Each line shows travel time vs.
-            number of neighborhoods accessible, illustrating where access
-            to upward-mobility destinations collapses.
-          </figcaption>
-        </figure>
-      </div>
+  <figure>
+    <img src="figures/map_km_rung.png" alt="Choropleth map of mobility rungs by NYC neighborhood.">
+    <figcaption><b>Figure 5.</b> Mobility rungs by NYC neighborhood, derived by K-means clustering of NTA mobility scores.</figcaption>
+  </figure>
 
-    </section><!-- /results -->
+  <h2 id="discussion">Discussion</h2>
+  <p>Research shows bridging networks can predict various outcomes such as financial growth and child development, suggesting that conventional factors like investment, education, and infrastructure may not directly cause improvement. Instead, these factors may matter because they either help or hurt individuals build diverse networks, identify new opportunities, and act on them.<sup><a href="#fn10" id="r10">10</a></sup> Rather than using AI for systemic design, this project is intended to be a tool for the individual to act on opportunities with reduced friction.</p>
 
-    <!-- ──────────────────────────────────────────────────────────
-         SECTION 3: DISCUSSION
-    ────────────────────────────────────────────────────────────-->
-    <section id="discussion">
-      <h2>Discussion</h2>
+  <h3>Limitations</h3>
+  <p>The primary limitations of this approach lie in its underlying infrastructure: the dataset and the web itself. The dataset is anchored to Opportunity Atlas social mobility scores, a static snapshot that may not reflect current neighborhood realities. The web, as the system's source for events, introduces a digital bias: venues and institutions with stronger online presence are more likely to surface in search results, while informal community activity, which may be equally or more valuable to community life, remains underrepresented.</p>
 
-      <div class="subsection" id="discussion-interpretation">
-        <h3>3.1 &nbsp; What the Data Reveals</h3>
-        <p>
-          <!-- PLACEHOLDER -->
-          [INTERPRETIVE TEXT: synthesize findings from all 3 figures.
-          The structural barriers to upward mobility are not just economic —
-          they are geographic and behavioral.]
-        </p>
-      </div>
+  <h3>Future Work</h3>
+  <p>Consequently, a promising direction for this prototype is to further enrich its knowledge base. Incorporating additional top-down neighborhood metrics, such as schools, workforce programs, and housing affordability, could enable recommendations to be tailored to different forms of user aspiration, such as education, employment, or family life. From a bottom-up lens, incorporating data referred to as "stories for ourselves" would provide insights that reflect community context and values.<sup><a href="#fn11" id="r11">11</a></sup></p>
+  <p>Personalization represents a related opportunity: incorporating a user's place-exploration history. The prototype currently lacks persistent memory, so each conversation begins independently unless a user re-shares that information themselves. With memory of where a user has already visited, recommendations could improve progressively over time. This same data would also support evaluation of the system's effectiveness, revealing whether users who receive itinerary recommendations actually travel to the suggested neighborhoods, and if so, whether repeat visits occur over time, reflecting the sustained contact associated with durable bridging ties.</p>
 
-      <div class="subsection" id="discussion-literature">
-        <h3>3.2 &nbsp; Supporting Evidence from the Literature</h3>
-        <p>
-          <!-- PLACEHOLDER — will cite Moro et al. 2021 and book findings -->
-          [LITERATURE TEXT: connect your findings to Moro et al. (2021)
-          and the book you read. Key themes: place exploration, visitation
-          patterns, experienced segregation, behavioral vs. residential factors.]
-        </p>
-      </div>
+  <h3>Implications</h3>
+  <p>Although this prototype was built for New York City, its underlying data pipeline is not city-specific by design. Constructed from Census tract–level Opportunity Atlas data, the data transformation pipeline could be adapted to other U.S. cities or regions by filtering to different tract codes and incorporating a region-specific transit network, without requiring a redesign of the core methodology. This suggests the approach could be of use to city agencies seeking data-informed tools to support public services.</p>
 
-      <div class="subsection" id="discussion-intervention">
-        <h3>3.3 &nbsp; The Proposed Intervention: An AI Exploration Agent</h3>
-        <p>
-          <!-- PLACEHOLDER -->
-          [INTERVENTION TEXT: describe the 3-part AI agent —
-          Neighborhood Discovery Assistant, Weekly Exploration Planner,
-          Behavioral Coach — and how each addresses a gap shown in the data.]
-        </p>
+  <h3>Ethical Considerations</h3>
+  <p>This work raises several ethical considerations. Ranking neighborhoods along a mobility ladder risks flattening community value into a single metric. Neighborhoods assigned low rungs could be stigmatized as places to leave rather than places with assets.</p>
+  <p>Additionally, the intended directionality of benefit matters critically. This system is designed to build the user's social capital, not to extract value from destination neighborhoods. However, this distinction would need to be reinforced carefully in any real-world deployment.</p>
 
-        <!-- SCREEN RECORDING EMBED -->
-        <div class="video-container">
-          <h4>Demo: AI Agent in Action</h4>
-          <video controls poster="">
-            <source src="videos/intervention_demo.mp4" type="video/mp4">
-            <source src="videos/intervention_demo.webm" type="video/webm">
-            <p>Your browser does not support the video tag.
-               <a href="videos/intervention_demo.mp4">Download the demo video.</a>
-            </p>
-          </video>
-          <p class="video-caption">
-            <em>Screen recording demonstrating the AI exploration agent prototype.
-            [Brief description of what is shown in the recording.]</em>
-          </p>
-        </div>
-      </div>
+  <h2 id="conclusion">Conclusion</h2>
+  <p>This project developed a prototype agentic system that grounds large language models in structured socioeconomic and transit data, generating itineraries to New York City neighborhoods with higher social mobility and discovering venues in real time. This prototype does not claim to build durable bridging ties, transform neighborhood mobility patterns, or address the structural inequities that limit opportunity access.</p>
+  <p>What it offers instead is a reframing of AI in service of social connection and economic mobility. Rather than asking how AI can redesign cities to improve bridging networks, this work asks how technology can serve as social infrastructure at the individual level. Not as concrete and transit systems, but as the tools and knowledge that enable individuals to build their own social capital by navigating existing opportunity landscapes more effectively. The challenge ahead is determining when such systems merely enable movement and when they meaningfully support the repeated, situated interactions from which bridging ties grow.</p>
 
-      <div class="subsection" id="discussion-limitations">
-        <h3>3.4 &nbsp; Limitations and Next Steps</h3>
-        <p>
-          <!-- PLACEHOLDER -->
-          [LIMITATIONS TEXT: data constraints, transit assumptions,
-          what the agent still needs to do, future work.]
-        </p>
-      </div>
+  <h2 id="appendix">Appendix</h2>
 
-    </section><!-- /discussion -->
+  <h3>Computational Environment</h3>
+  <p>All data processing was performed in Python 3 using pandas and NumPy for tabular operations, GeoPandas and Shapely for spatial operations, NetworkX for graph construction and shortest-path computation, scikit-learn for K-means clustering, and requests for API retrieval. Figures were produced with Matplotlib, Seaborn, and Folium. Census population counts were retrieved programmatically from the U.S. Census Bureau API; NTA boundaries were retrieved from the NYC Department of City Planning ArcGIS Feature Service.</p>
 
-    <!-- ──────────────────────────────────────────────────────────
-         SECTION 4: METHODS
-    ────────────────────────────────────────────────────────────-->
-    <section id="methods">
-      <h2>Methods</h2>
+  <h3>Data Sources and Transformations</h3>
+  <p>The agent's knowledge base integrates publicly available data. Datasets were combined through a multi-stage processing pipeline to produce neighborhood-level opportunity estimates and transit accessibility measures for 197 Neighborhood Tabulation Areas (NTAs) in New York City. Table A1 summarizes the data sources used in constructing the knowledge base.</p>
 
-      <div class="subsection" id="methods-data">
-        <h3>4.1 &nbsp; Data Sources</h3>
-        <p>
-          <!-- PLACEHOLDER -->
-          [DATA TEXT: Opportunity Atlas, NTA shapefiles, MTA GTFS or
-          travel time matrix, KMeans clustering approach]
-        </p>
-      </div>
+  <table>
+    <caption style="caption-side:top; text-align:left; font-size:14px; color:var(--muted); padding-bottom:8px;"><b style="color:var(--ink)">Table A1.</b> Data sources for the agent knowledge base.</caption>
+    <tr><th>Source</th><th>Dataset</th><th>Vintage</th><th>Role in pipeline</th></tr>
+    <tr><td>Opportunity Insights</td><td>Opportunity Atlas (<code>kfr_pooled_p25</code>)</td><td>2010 tracts</td><td>Tract-level social mobility estimates</td></tr>
+    <tr><td>HUD</td><td>Census Tract Crosswalk</td><td>2010–2020</td><td>Harmonization of 2010 estimates to 2020 tracts</td></tr>
+    <tr><td>U.S. Census Bureau</td><td>PL 94-171 Redistricting Data (<code>P1_001N</code>)</td><td>2020</td><td>Population weights; exclusion of non-residential tracts</td></tr>
+    <tr><td>NYC Dept. of City Planning</td><td>NTA boundaries; tract-to-NTA equivalency</td><td>2020</td><td>Neighborhood aggregation geography</td></tr>
+    <tr><td>MTA</td><td>Subway GTFS feed</td><td>2026</td><td>Transit graph and travel-time estimation</td></tr>
+  </table>
 
-      <div class="subsection" id="methods-definitions">
-        <h3>4.2 &nbsp; Key Definitions</h3>
-        <dl class="definitions">
-          <dt>Mobility Score</dt>
-          <dd>Neighborhood-level score derived from Opportunity Atlas data,
-              translated from census tracts to NTAs.</dd>
+  <h4>Opportunity Atlas</h4>
+  <p>Social mobility is operationalized using the Opportunity Atlas measure <code>kfr_pooled_p25</code>, which estimates the household income rank in adulthood (25th percentile) for children raised in low-income households, pooled across genders and races. Higher values indicate greater levels of intergenerational upward economic mobility. Census tract identifiers (GEOID) were retained as the unique geographic identifier throughout the initial stages of data processing.</p>
 
-          <dt>Rung</dt>
-          <dd>A categorical label (1–4) assigned to each NTA via KMeans
-              clustering on the mobility score. Rung 1 = lowest mobility
-              potential; Rung 4 = highest.</dd>
+  <h4>Census Tract Crosswalk</h4>
+  <p>The Opportunity Atlas reported using 2010 Census tract boundaries, so 2020 tract-level mobility estimates were harmonized using the 2010–2020 Census Tract Crosswalk published by the U.S. Department of Housing and Urban Development (HUD). Three variables from the crosswalk were used during this transformation: <code>GEOID_2010</code>, <code>GEOID_2020</code>, and <code>RES_RATIO</code>.</p>
+  <p>The residential allocation ratio (<code>RES_RATIO</code>) represents the proportion of a 2010 tract's residential population reassigned to each corresponding 2020 tract. These weights were used to translate mobility scores from 2010 Census tracts into 2020 Census tracts:</p>
+  <p>\[ Score_{20,j} = \frac{\sum_{i \in I(j)} \left( RES\_RATIO_{ij} \times Score_{10,i} \right)}{\sum_{i \in I(j)} RES\_RATIO_{ij}} \]</p>
+  <p class="formula-note">where \(Score_{20,j}\) is the harmonized mobility estimate for 2020 Census tract \(j\); \(Score_{10,i}\) is the Opportunity Atlas mobility estimate for 2010 Census tract \(i\); \(RES\_RATIO_{ij}\) is the proportion of the residential population from 2010 tract \(i\) reassigned to 2020 tract \(j\); and \(I(j)\) is the set of 2010 tracts overlapping 2020 tract \(j\).</p>
 
-          <dt>Delta Rung</dt>
-          <dd>Destination rung minus origin rung. A positive delta rung
-              indicates access to a higher-mobility neighborhood.</dd>
+  <h4>2020 Decennial Census Population</h4>
+  <p>Population counts were obtained from the 2020 Decennial Census Public Law 94-171 (PL 94-171) Redistricting Data through the U.S. Census Bureau API. Total population (<code>P1_001N</code>) was retrieved for every census tract within the five boroughs of New York City including the Bronx, Brooklyn, Manhattan, Queens, and Staten Island.</p>
+  <p>Population estimates served two purposes. First, census tracts with non-positive population were excluded from further analysis because they do not represent residential neighborhoods. Second, tract populations were used as weights when aggregating tract-level mobility estimates to neighborhood-level measures, explained below.</p>
 
-          <dt>Desert</dt>
-          <dd>An origin neighborhood with no +1 rung destination reachable
-              within 45 minutes of travel.</dd>
-        </dl>
-      </div>
+  <h4>Neighborhood Tabulation Areas</h4>
+  <p>Neighborhood-level analyses were conducted using 2020 Neighborhood Tabulation Areas (NTAs) developed by the New York City Department of City Planning. For each NTA, the neighborhood social mobility score was calculated as a population-weighted average of the constituent Census tracts:</p>
+  <p>\[ Score_{NTA,k} = \frac{\sum_{j \in J(k)} \left( P_j \times Score_{20,j} \right)}{\sum_{j \in J(k)} P_j} \]</p>
+  <p class="formula-note">where \(Score_{NTA,k}\) is the population-weighted mobility score for NTA \(k\); \(Score_{20,j}\) is the harmonized mobility estimate for 2020 Census tract \(j\); \(P_j\) is the 2020 Census population count for tract \(j\) (<code>P1_001N</code>); and \(J(k)\) is the set of 2020 tracts assigned to NTA \(k\).</p>
 
-      <div class="subsection" id="methods-approach">
-        <h3>4.3 &nbsp; Analytical Approach</h3>
-        <p>
-          <!-- PLACEHOLDER -->
-          [APPROACH TEXT: how you built the travel time matrix,
-          how you identified nearest neighbors, how deserts were flagged]
-        </p>
+  <h4>Defining Mobility Rungs</h4>
+  <p>Scores are translated into discrete tiers, or "rungs," using K-means clustering. Resulting clusters are then ranked from lowest to highest average social mobility score to form a ladder.</p>
+  <p>The number of mobility rungs was selected empirically. For each candidate value of K, the within-cluster sum of squares was calculated:</p>
+  <p>\[ W_K = \sum_{k=1}^{K} \sum_{x_i \in C_k} \left( x_i - \mu_k \right)^2 \]</p>
+  <p class="formula-note">where \(C_k\) represents cluster \(k\), \(x_i\) represents the mobility score of NTA \(i\), and \(\mu_k\) represents the centroid of cluster \(k\).</p>
+  <p>The explained variance of each clustering solution was calculated:</p>
+  <p>\[ R^2 = 1 - \frac{W_K}{W_1} \]</p>
+  <p class="formula-note">where \(W_1\) represents the total variance of the unclustered mobility scores around the overall mean.</p>
+  <p>The final number of mobility rungs was selected as the smallest number of clusters that explained at least 90% of total variance in neighborhood mobility scores. The 4 resulting rungs contained 58, 45, 42, and 52 neighborhoods, ordered from lowest to highest mobility.</p>
 
-        <!-- OPTIONAL: Code snippet block -->
-        <pre><code>
-# PLACEHOLDER — insert representative code snippet here
-# e.g., KMeans clustering on mobility scores
+  <figure>
+    <img src="figures/r2_v_k.png" alt="Explained variance versus number of clusters K.">
+    <figcaption><b>Figure 6.</b> Explained variance (R²) by number of clusters K.</figcaption>
+  </figure>
 
-from sklearn.cluster import KMeans
-import pandas as pd
+  <p>Clusters were ordered according to their centroid values to create an interpretable mobility ladder. Cluster centroids were sorted from lowest to highest social mobility score, and clusters were assigned sequential rung values where Rung 1 represents the cluster with the lowest average social mobility score and Rung 4 represents the cluster with the highest average social mobility score.</p>
 
-kmeans = KMeans(n_clusters=4, random_state=42)
-df['rung'] = kmeans.fit_predict(df[['mobility_score']])
-        </code></pre>
-      </div>
+  <figure>
+    <img src="figures/score_by_rung_analysis.png" alt="Distribution of mobility scores by rung.">
+    <figcaption><b>Figure 7.</b> Score distribution by mobility rung.</figcaption>
+  </figure>
 
-      <div class="subsection" id="methods-tools">
-        <h3>4.4 &nbsp; Tools and Libraries</h3>
-        <ul class="tools-list">
-          <li><strong>Python</strong> — core analysis language</li>
-          <li><strong>[Library 1]</strong> — [purpose]</li>
-          <li><strong>[Library 2]</strong> — [purpose]</li>
-          <li><strong>[Visualization library]</strong> — interactive HTML graphs</li>
-          <li><strong>Opportunity Atlas</strong> — mobility score source data</li>
-          <li><strong>MTA / Transit data</strong> — travel time computation</li>
-        </ul>
-      </div>
+  <h4>Metropolitan Transportation Authority GTFS Feed</h4>
+  <p>Subway network data was obtained from the Metropolitan Transportation Authority (MTA) General Transit Feed Specification (GTFS). Three GTFS files were used to reconstruct scheduled subway service:</p>
+  <ul>
+    <li><code>stops.txt</code>, containing station identifiers, names, geographic coordinates, and parent-station relationships;</li>
+    <li><code>trips.txt</code>, identifying scheduled train trips, routes, and service patterns;</li>
+    <li><code>stop_times.txt</code>, containing the ordered sequence of station stops together with scheduled arrival and departure times for every trip.</li>
+  </ul>
+  <p>These files were used to reconstruct the subway network as a weighted directed graph for estimating scheduled travel times between neighborhoods, where nodes represent GTFS stop identifiers (platforms) and edges represent scheduled travel segments between consecutive stops.</p>
+  <p>To associate subway stops with neighborhoods, the official 2020 Neighborhood Tabulation Area polygon geometries were used to represent neighborhood boundaries spatially.</p>
+  <p>For each origin Neighborhood Tabulation Area (NTA), a temporary source node was added to the graph and connected to all available subway stops associated with that neighborhood. This approach allowed each neighborhood to enter the subway network through multiple potential access points.</p>
 
-    </section><!-- /methods -->
+  <figure>
+    <img src="figures/map_km_rung_w_mta.png" alt="Mobility rungs overlaid with subway network access points.">
+    <figcaption><b>Figure 8.</b> Mobility rungs overlaid with the subway network, illustrating neighborhood access points to the transit graph.</figcaption>
+  </figure>
 
-    <!-- ──────────────────────────────────────────────────────────
-         SECTION 5: REFERENCES
-    ────────────────────────────────────────────────────────────-->
-    <section id="references">
-      <h2>References</h2>
-      <ol class="references-list">
-        <li id="ref-moro2021">
-          Moro, E., Calacci, D., Dong, X., &amp; Pentland, A. (2021).
-          Mobility patterns are associated with experienced income segregation
-          in large US cities.
-          <em>Nature Communications</em>, 12, 4633.
-          <a href="https://doi.org/10.1038/s41467-021-24899-8" target="_blank">
-            https://doi.org/10.1038/s41467-021-24899-8
-          </a>
-        </li>
-        <li id="ref-book">
-          [BOOK REFERENCE — Author, Title, Year]
-        </li>
-        <li id="ref-opp-atlas">
-          Chetty, R., Friedman, J. N., Hendren, N., Jones, M. R., &amp;
-          Porter, S. R. (2018). The Opportunity Atlas: Mapping the Childhood
-          Roots of Social Mobility. NBER Working Paper No. 25147.
-        </li>
-      </ol>
-    </section>
+  <p>Additional derived variables were included to characterize potential neighborhood transitions, including mobility score differences, rung changes, and ranking indicators used to evaluate destination alternatives:</p>
+  <p>\[ \Delta Rung_{ij} = Rung_j - Rung_i \]</p>
+  <p class="formula-note">where \(Rung_i\) and \(Rung_j\) represent the mobility rungs of the origin and destination neighborhoods, respectively. Positive values indicate that the destination neighborhood has a higher mobility classification than the origin neighborhood.</p>
+  <p>For the agent's knowledge base, the dataset was filtered to retain only upward mobility transitions, defined as destination neighborhoods with a mobility rung at least one level higher than the origin neighborhood.</p>
+  <p>The full construction pipeline described in this appendix is implemented in a single Jupyter notebook (<code>bridging_networks.ipynb</code>), available in the project repository, which reproduces the knowledge base end to end.</p>
+
+  <h4>Agent Construction</h4>
+  <p>The multi-agent workflow is implemented in Langflow, an open-source visual orchestration framework for LLM applications. The workflow consists of four LLM agents arranged in a routed pipeline: an intake agent that determines whether the user's request is sufficiently specified, a clarification agent that elicits missing information, a search agent that ranks candidate destinations against the knowledge base, and a synthesize agent that translates ranked destinations into a coaching-oriented response with concrete activity suggestions.</p>
+
+  <figure>
+    <img src="figures/figure_b1_agent_workflow.png" alt="Four-agent routed pipeline.">
+    <figcaption><b>Figure 9.</b> Agent workflow: intake, clarification, search, and synthesis agents in a routed pipeline.</figcaption>
+  </figure>
+
+  <p>All external capabilities are accessed through Model Context Protocol (MCP) tools: a tabular query tool over the agent knowledge base, a web search tool, and a current-date tool. System prompts are reproduced verbatim in <code>PROMPTS.MD</code>; however, the three MCP tools used in this work are served by a proprietary internal platform and are not distributed. Readers wishing to reproduce the system must compose equivalent tool integrations independently and supply their own model configuration and API credentials.</p>
+
+  <div class="notes" id="notes">
+    <h2>Notes</h2>
+    <ol>
+      <li id="fn1">Xiaowen Dong et al., "Social Bridges in Urban Purchase Behavior," <em>ACM Transactions on Intelligent Systems and Technology</em> 9, no. 3 (2017): 1–29, <a href="https://dl.acm.org/doi/10.1145/3149409">https://dl.acm.org/doi/10.1145/3149409</a>. <a href="#r1">↩</a></li>
+      <li id="fn2">Robert J. Sampson et al., "Neighborhoods and Violent Crime: A Multilevel Study of Collective Efficacy," <em>Science</em> 277, no. 5328 (1997): 918–924, <a href="https://www.science.org/doi/10.1126/science.277.5328.918">https://www.science.org/doi/10.1126/science.277.5328.918</a>; Shi Kai Chong et al., "Economic Outcomes Predicted by Diversity in Cities," <em>EPJ Data Science</em> 9, no. 17 (2020), <a href="https://doi.org/10.1140/epjds/s13688-020-00234-x">https://doi.org/10.1140/epjds/s13688-020-00234-x</a>. <a href="#r2">↩</a></li>
+      <li id="fn3">Robert J. Sampson and Brian L. Levy, "The Enduring Neighborhood Effect, Everyday Urban Mobility, and Violence in Chicago," <em>University of Chicago Law Review</em> 89, no. 2 (2022): 323–347, <a href="https://www.jstor.org/stable/27131333">https://www.jstor.org/stable/27131333</a>. <a href="#r3">↩</a></li>
+      <li id="fn4">Shi Kai Chong et al., "Economic Outcomes Predicted by Diversity in Cities," <em>EPJ Data Science</em> 9, no. 17 (2020), <a href="https://doi.org/10.1140/epjds/s13688-020-00234-x">https://doi.org/10.1140/epjds/s13688-020-00234-x</a>. <a href="#r4">↩</a></li>
+      <li id="fn5">Alex Pentland, <em>Shared Wisdom: Cultural Evolution in the Age of AI</em> (Cambridge, MA: MIT Press, 2025), 39. <a href="#r5">↩</a></li>
+      <li id="fn6">Pentland, <em>Shared Wisdom</em>, 48. <a href="#r6">↩</a></li>
+      <li id="fn7">Raj Chetty et al., "Social Capital I: Measurement and Associations with Economic Mobility," <em>Nature</em> 608, no. 7921 (2022): 108–121, <a href="https://doi.org/10.1038/s41586-022-04996-4">https://doi.org/10.1038/s41586-022-04996-4</a>; Raj Chetty et al., "Social Capital II: Determinants of Economic Connectedness," <em>Nature</em> 608, no. 7921 (2022): 122–134, <a href="https://doi.org/10.1038/s41586-022-04997-3">https://doi.org/10.1038/s41586-022-04997-3</a>. <a href="#r7">↩</a></li>
+      <li id="fn8">Esteban Moro et al., "Mobility Patterns Are Associated with Experienced Income Segregation in Large US Cities," <em>Nature Communications</em> 12, no. 4633 (2021), <a href="https://doi.org/10.1038/s41467-021-24899-8">https://doi.org/10.1038/s41467-021-24899-8</a>. <a href="#r8">↩</a></li>
+      <li id="fn9">Raj Chetty et al., "The Opportunity Atlas: Mapping the Childhood Roots of Social Mobility," NBER Working Paper 25147 (2018), <a href="https://doi.org/10.3386/w25147">https://doi.org/10.3386/w25147</a>; data accessed via "Neighborhoods Matter," Opportunity Insights, accessed March 3, 2026, <a href="https://opportunityinsights.org/neighborhoods/">https://opportunityinsights.org/neighborhoods/</a>. <a href="#r9">↩</a></li>
+      <li id="fn10">Pentland, <em>Shared Wisdom</em>, 45. <a href="#r10">↩</a></li>
+      <li id="fn11">Pentland, <em>Shared Wisdom</em>, 52. <a href="#r11">↩</a></li>
+    </ol>
+  </div>
+
+  <div class="datasrc" id="supplementary">
+    <h2>Supplementary Materials</h2>
+
+    <h3>Repository</h3>
+    <p>All project code, data imports, exports, and documentation are made public.</p>
+    <div class="repo">
+      <a href="https://github.com/all-things-ava/bridging-nyc">View code on GitHub</a>
+    </div>
+
+    <h3>Datasets</h3>
+    <p>The raw datasets used to construct the agent knowledge base, with the processing notebook (<code>bridging_networks.ipynb</code>) that reproduces the pipeline end to end.</p>
+    <p class="cite">Metropolitan Transportation Authority. "New York City Subway General Transit Feed Specification (GTFS)." Accessed March 2026. <a href="http://web.mta.info/developers/data/nyct/subway/google_transit.zip">http://web.mta.info/developers/data/nyct/subway/google_transit.zip</a>.</p>
+    <p class="cite">New York City Department of City Planning. "2020 Census Tracts to 2020 Neighborhood Tabulation Areas and Community District Tabulation Areas Equivalency File." 2020. Accessed March 2026. <a href="https://data.cityofnewyork.us/">https://data.cityofnewyork.us/</a>.</p>
+    <p class="cite">New York City Department of City Planning. "2020 Neighborhood Tabulation Areas (NTA) Boundaries." ArcGIS Feature Service. 2020. Accessed March 2026. <a href="https://services5.arcgis.com/GfwWNkhOj9bNBqoJ/ArcGIS/rest/services/nyc_neighborhood_tabulation_areas_2020/FeatureServer">https://services5.arcgis.com/.../FeatureServer</a>.</p>
+    <p class="cite">Opportunity Insights. "Opportunity Atlas." 2022. Accessed March 3, 2026. <a href="https://www.opportunityatlas.org">https://www.opportunityatlas.org</a>.</p>
+    <p class="cite">U.S. Census Bureau. "2020 Decennial Census Redistricting Data (Public Law 94-171)." 2020. Accessed March 2026. <a href="https://api.census.gov/data/2020/dec/pl">https://api.census.gov/data/2020/dec/pl</a>.</p>
+    <p class="cite">U.S. Department of Housing and Urban Development. "2010–2020 Census Tract Crosswalk Files." 2024. Accessed March 2026. <a href="https://www.huduser.gov/portal/datasets/census_tract_crosswalk.html">https://www.huduser.gov/portal/datasets/census_tract_crosswalk.html</a>.</p>
+  </div>
 
   </main>
 
-  <!-- ============================================================
-       FOOTER
-  ============================================================ -->
-  <footer>
-    <p>
-      Created by [Your Name] &nbsp;|&nbsp; [Year] &nbsp;|&nbsp;
-      Graduate School Portfolio Project
-    </p>
-  </footer>
-
+</div>
+<script>
+(function () {
+  var links = Array.prototype.slice.call(document.querySelectorAll('.toc a[href^="#"]'));
+  var pairs = links.map(function (a) {
+    return { a: a, el: document.querySelector(a.getAttribute('href')) };
+  }).filter(function (p) { return p.el; });
+  var obs = new IntersectionObserver(function (entries) {
+    entries.forEach(function (en) {
+      if (en.isIntersecting) {
+        links.forEach(function (l) { l.classList.remove('active'); });
+        var hit = pairs.filter(function (p) { return p.el === en.target; })[0];
+        if (hit) hit.a.classList.add('active');
+      }
+    });
+  }, { rootMargin: '-15% 0px -75% 0px' });
+  pairs.forEach(function (p) { obs.observe(p.el); });
+})();
+</script>
 </body>
 </html>

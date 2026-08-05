@@ -1,101 +1,30 @@
----
-title: Bridging Networks - Mobility & Transit Analysis
-emoji: 🚇
-colorFrom: blue
-colorTo: green
-sdk: gradio
-sdk_version: 4.44.0
-app_file: app.py
-pinned: false
----
+# Bridging NYC
 
-# 🚇 Bridging Networks - Mobility & Transit Analysis Dashboard
+**An agentic system for navigating the opportunity landscape.**
 
-An interactive visualization dashboard exploring how NYC's transit network connects neighborhoods across economic mobility rungs. Reveals which areas can access higher-opportunity neighborhoods—and which face "desert" conditions with no upward mobility paths within 45 minutes.
+Given a user's origin neighborhood and travel-time constraint, this prototype uses LLM-based agents grounded in structured socioeconomic and transit data to generate itineraries to New York City neighborhoods associated with stronger upward mobility outcomes, with real-time venue discovery.
 
-## 🎯 Features
+**Read the full write-up:** https://all-things-ava.github.io/bridging-nyc/
 
-- **Base Maps**: View mobility scores and rungs (1–4) across NYC neighborhoods with MTA overlay
-- **Nearest Destinations**: Interactive map showing each origin's nearest higher-rung destination (color-coded by delta rung)
-- **Top Attractors**: Explore the 10 neighborhoods that attract the most origins seeking upward mobility
-- **Mobility Deserts**: Identify neighborhoods with no +1 rung destination within 45 minutes
-- **Interactive Controls**: Pan, zoom, hover for details, and filter by destination
+## Repository contents
 
-## 📊 Key Concepts
+| Path | Contents |
+|---|---|
+| `index.html` | The full paper (methods, appendix, notes, data sources) |
+| `figures/` | All figures referenced in the paper |
+| `data_raw/` | Source datasets and the processing notebook |
+| `data_raw/bridging_networks.ipynb` | End-to-end pipeline that reproduces the agent knowledge base |
+| `data_raw/PROMPTS.MD` | Verbatim system prompts for the four LLM agents |
+| `data_raw/results/` | Exported knowledge base tables |
 
-- **Mobility Score**: Neighborhood-level score derived from Opportunity Atlas data
-- **Rung**: Categories 1–4 created by KMeans clustering on mobility score
-- **Delta Rung**: Destination rung minus origin rung (measures upward mobility potential)
-- **Desert**: Origin neighborhood with no +1 rung destination within 45 minutes
+## Data sources
 
-## 📈 Data Sources
+All input data is public: Opportunity Atlas mobility estimates (Opportunity Insights), the 2010–2020 Census Tract Crosswalk (HUD), 2020 Decennial Census PL 94-171 population counts (U.S. Census Bureau), 2020 Neighborhood Tabulation Area boundaries and equivalency files (NYC Department of City Planning), and the NYC subway GTFS feed (MTA). Full citations are in the paper's Data Sources section.
 
-This analysis uses:
-- Opportunity Atlas (economic mobility data)
-- NYC NTA (Neighborhood Tabulation Areas)
-- MTA subway network
-- GTFS transit travel times
+## Reproducing the system
 
-## 🛠️ Technical Architecture
+The knowledge base is fully reproducible from `bridging_networks.ipynb`. The multi-agent workflow itself is implemented in Langflow; the three MCP tools used (tabular query, web search, current date) were served by a proprietary internal platform and are not distributed. To reproduce the agents, compose equivalent tool integrations and supply your own model configuration and API credentials. System prompts are in `PROMPTS.MD`.
 
-This app uses a **two-stage approach** to optimize performance on Hugging Face Spaces:
+## Status
 
-1. **Preprocessing (Local)**: Heavy data processing and map generation done locally
-2. **Display (Hugging Face)**: Lightweight Gradio app serves pre-generated HTML maps
-
-This approach ensures:
-- Fast loading times
-- No need for large datasets on Hugging Face
-- Interactive visualizations remain fully functional
-- Minimal computational requirements
-
-## 🚀 How It Works
-
-The interactive maps are generated using [Folium](https://python-visualization.github.io/folium/), which creates HTML/JavaScript visualizations with:
-- Zoom and pan capabilities powered by Leaflet.js
-- Layer toggle controls
-- Popup information windows
-- Custom styling and filtering logic
-
-All maps are pre-generated and stored as static HTML files, making the dashboard fast and efficient to serve.
-
-## 📝 Usage
-
-Explore the five main tabs:
-
-1. **Overview: Base Maps**: NYC mobility scores and rungs with MTA subway overlay
-2. **Nearest Destinations Analysis**: Each origin linked to its nearest higher-rung destination (197 origins analyzed)
-3. **Top Attractor Destinations**: The 10 neighborhoods that attract the most upward-mobility seekers (86 origins, ~39 min avg)
-4. **Mobility Deserts**: Neighborhoods with no +1 rung access within 45 minutes
-5. **Additional Network Views**: Supplementary route and flow visualizations
-
-Use the interactive controls:
-- Hover over elements for detailed statistics
-- Zoom/pan to explore specific areas
-- Click to filter by destination (on attractor map)
-- View paired static summaries below each interactive map
-
-## 🔧 Deployment
-
-For developers looking to deploy similar dashboards:
-
-1. Run preprocessing locally:
-```bash
-pip install -r requirements-preprocessing.txt
-python preprocess.py
-```
-
-2. Upload the generated `data/` folder to your Hugging Face Space
-
-3. The Gradio app automatically loads and displays the maps
-
-## 📄 License
-
-This project analyzes public transit and census data for research and visualization purposes.
-
-## 🤝 Credits
-
-Built with:
-- [Gradio](https://gradio.app/) - Web interface framework
-- [Folium](https://python-visualization.github.io/folium/) - Interactive mapping
-- [Hugging Face Spaces](https://huggingface.co/spaces) - Hosting platform
+Research prototype (2026). Not a deployed service.
