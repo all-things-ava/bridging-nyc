@@ -14,7 +14,7 @@ Given a user's origin neighborhood and travel-time constraint, this prototype us
 | `figures/` | All figures referenced in the paper |
 | `data_raw/` | Source datasets and the processing notebook |
 | `data_raw/bridging_networks.ipynb` | End-to-end pipeline that reproduces the agent knowledge base |
-| `data_raw/PROMPTS.MD` | Verbatim system prompts for the four LLM agents |
+| `data_raw/PROMPTS.MD` | Verbatim system prompts for the LLM agent |
 | `data_raw/results/` | Exported knowledge base tables |
 
 ## Data sources
