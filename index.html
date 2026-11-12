@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Bridging NYC — An Agentic Prototype for Navigating the Opportunity Landscape</title>
+<title>Bridging NYC: An Agentic Prototype for Navigating the Opportunity Landscape</title>
 <meta name="description" content="A prototype agentic system that grounds LLMs in socioeconomic and transit data to generate itineraries to higher-mobility NYC neighborhoods.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
@@ -81,7 +81,7 @@
     <a href="#appendix">Appendix</a>
     <a href="#notes">Notes</a>
     <a href="#supplementary">Supplementary Materials</a>
-    <div class="gh"><a href="https://github.com/all-things-ava/bridging-nyc">GitHub ↗</a></div>
+    <div class="gh"><a href="https://github.com/all-things-ava/bridging-nyc">GitHub ↗</a><a href="https://all-things-ava.github.io/nearest-neighbor/">Prequel: One Rung Up ↗</a></div>
   </nav>
 
   <main class="content">
@@ -115,7 +115,7 @@
   </figure>
 
   <h3>Agent Architecture</h3>
-  <p>Each person has limited time and energy for relationships. They must divide their efforts between strengthening internal community ties, or bonding capital, and creating outward connections, or bridging capital.<sup><a href="#fn6" id="r6">6</a></sup> Prior research on social capital suggests that the most effective bridging connections are not to the wealthiest or most distant communities, but to communities just one step better off than one's own. To put it simply, the most useful connections are to communities that are one rung higher on the socioeconomic ladder.<sup><a href="#fn7" id="r7">7</a></sup></p>
+  <p>Each person has limited time and energy for relationships. They must divide their efforts between strengthening internal community ties, or bonding capital, and creating outward connections, or bridging capital.<sup><a href="#fn6" id="r6">6</a></sup> Prior research on social capital suggests that the most effective bridging connections are not to the wealthiest or most distant communities, but to communities just one step better off than one's own. To put it simply, the most useful connections are to communities that are one rung higher on the socioeconomic ladder.<sup><a href="#fn7" id="r7">7</a></sup> This premise was first examined in a preliminary analysis, <a href="https://all-things-ava.github.io/nearest-neighbor/"><em>One Rung Up</em></a>, through data analysis and visualization.</p>
   <p>First, the Search Agent queries the knowledge base for precomputed relationships between neighborhoods, favoring destinations with stronger upward mobility outcomes, specifically neighborhoods exactly one rung higher, that remain feasible within the user's limited time budget for travel on a given day. If multiple options remain, it selects the destination offering the greatest mobility benefit relative to travel time. When these criteria cannot all be satisfied, such as when no one-rung-higher destination falls within the user's time budget, the Search Agent prioritizes an appropriate mobility step and travel feasibility over strict optimization of mobility gain.</p>
   <p>The Synthesize Agent translates the Search Agent's destination selection into a concrete, actionable itinerary, using real-time web search to identify specific venues, such as museums, exhibits, science museums, convention centers, theme parks, coffee shops, and cafes, and prioritizing time-sensitive events when available.</p>
   <p>These venue categories are not arbitrary. Segregation between communities arises not only from where people live, but from everyday cultural patterns in where people work, shop, and play, meaning the category of venue visited, not just its neighborhood location, shapes who encounters whom. Empirical work supports this: museums and exhibits rank among the most income-integrated venue types in American cities, and individuals with high "place exploration," a tendency to visit new locations rather than routine ones, are disproportionately drawn to exhibits, theaters, and cafes.<sup><a href="#fn8" id="r8">8</a></sup> The Synthesize Agent's venue categories align with both findings, favoring place types that are less income-segregated and behaviorally associated with exploratory, rather than routine, mobility patterns.</p>
@@ -174,7 +174,7 @@
   <table>
     <caption style="caption-side:top; text-align:left; font-size:14px; color:var(--muted); padding-bottom:8px;"><b style="color:var(--ink)">Table A1.</b> Data sources for the agent knowledge base.</caption>
     <tr><th>Source</th><th>Dataset</th><th>Vintage</th><th>Role in pipeline</th></tr>
-    <tr><td>Opportunity Insights</td><td>Opportunity Atlas (<code>kfr_pooled_p25</code>)</td><td>2010 tracts</td><td>Tract-level social mobility estimates</td></tr>
+    <tr><td>Opportunity Insights</td><td>Opportunity Atlas (<code>kfr_pooled_pooled_p25</code>)</td><td>2010 tracts</td><td>Tract-level social mobility estimates</td></tr>
     <tr><td>HUD</td><td>Census Tract Crosswalk</td><td>2010–2020</td><td>Harmonization of 2010 estimates to 2020 tracts</td></tr>
     <tr><td>U.S. Census Bureau</td><td>PL 94-171 Redistricting Data (<code>P1_001N</code>)</td><td>2020</td><td>Population weights; exclusion of non-residential tracts</td></tr>
     <tr><td>NYC Dept. of City Planning</td><td>NTA boundaries; tract-to-NTA equivalency</td><td>2020</td><td>Neighborhood aggregation geography</td></tr>
@@ -182,10 +182,10 @@
   </table>
 
   <h4>Opportunity Atlas</h4>
-  <p>Social mobility is operationalized using the Opportunity Atlas measure <code>kfr_pooled_p25</code>, which estimates the household income rank in adulthood (25th percentile) for children raised in low-income households, pooled across genders and races. Higher values indicate greater levels of intergenerational upward economic mobility. Census tract identifiers (GEOID) were retained as the unique geographic identifier throughout the initial stages of data processing.</p>
+  <p>Social mobility is operationalized using the Opportunity Atlas measure <code>kfr_pooled_pooled_p25</code>, which estimates the mean household income rank in adulthood for children whose parents were at the 25th percentile of the national income distribution, pooled across genders and races. Higher values indicate greater levels of intergenerational upward economic mobility. Census tract identifiers (GEOID) were retained as the unique geographic identifier throughout the initial stages of data processing.</p>
 
   <h4>Census Tract Crosswalk</h4>
-  <p>The Opportunity Atlas reported using 2010 Census tract boundaries, so 2020 tract-level mobility estimates were harmonized using the 2010–2020 Census Tract Crosswalk published by the U.S. Department of Housing and Urban Development (HUD). Three variables from the crosswalk were used during this transformation: <code>GEOID_2010</code>, <code>GEOID_2020</code>, and <code>RES_RATIO</code>.</p>
+  <p>The Opportunity Atlas reports estimates on 2010 Census tract boundaries, so these estimates were harmonized to 2020 tracts using the 2010–2020 Census Tract Crosswalk published by the U.S. Department of Housing and Urban Development (HUD). Three variables from the crosswalk were used during this transformation: <code>GEOID_2010</code>, <code>GEOID_2020</code>, and <code>RES_RATIO</code>.</p>
   <p>The residential allocation ratio (<code>RES_RATIO</code>) represents the proportion of a 2010 tract's residential population reassigned to each corresponding 2020 tract. These weights were used to translate mobility scores from 2010 Census tracts into 2020 Census tracts:</p>
   <p>\[ Score_{20,j} = \frac{\sum_{i \in I(j)} \left( RES\_RATIO_{ij} \times Score_{10,i} \right)}{\sum_{i \in I(j)} RES\_RATIO_{ij}} \]</p>
   <p class="formula-note">where \(Score_{20,j}\) is the harmonized mobility estimate for 2020 Census tract \(j\); \(Score_{10,i}\) is the Opportunity Atlas mobility estimate for 2010 Census tract \(i\); \(RES\_RATIO_{ij}\) is the proportion of the residential population from 2010 tract \(i\) reassigned to 2020 tract \(j\); and \(I(j)\) is the set of 2010 tracts overlapping 2020 tract \(j\).</p>
@@ -277,6 +277,7 @@
     <p>All project code, data imports, exports, and documentation are made public.</p>
     <div class="repo">
       <a href="https://github.com/all-things-ava/bridging-nyc">View code on GitHub</a>
+      <a class="alt" href="https://all-things-ava.github.io/nearest-neighbor/">Prequel: One Rung Up</a>
     </div>
 
     <h3>Datasets</h3>
